@@ -1,0 +1,39 @@
+#+TITLE: ConvexHullProjections.jl
+
+Compute the projection of zero on the convex hull of points iteratively using *arbitrary precision*. The iterates *eventually identify the active faces* of the polyhedron and converge quadratically.
+
+The implemented algorithm is described in the preprint *Newton acceleration on manifolds identified by proximal-gradient methods*, _G. Bareilles, F. Iutzeler, J. Malick_ available on [[https://arxiv.org/abs/2012.12936][arXiv]].
+
+Note that this a rather experimental code, don't hesitate to get in touch!
+
+* Example
+
+Three points in $\mathbb R^2$. The result is given as the coefficients of the linear combination of the convex hull edges. The identification property is evidenced by the *exact* zeros in the combination coefficients.
+
+#+begin_src julia
+julia> using ConvexHullProjection
+
+julia> set = ConvexHull{Float64}([
+           1 1 2
+           1 2 1
+       ])
+ConvexHull{Float64}([1.0 1.0 2.0; 1.0 2.0 1.0])
+
+julia> res = projection_zero(set, zeros(3))
+3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0
+
+julia> set = ConvexHull{BigFloat}([
+           2 1 2
+           2 2 1
+       ])
+ConvexHull{BigFloat}(BigFloat[2.0 1.0 2.0; 2.0 2.0 1.0])
+
+julia> res = projection_zero(set, zeros(BigFloat, 3))
+3-element Vector{BigFloat}:
+ 0.0
+ 0.4999999999999999999999999999999999999999999999999999999999999999999999999993825
+ 0.5000000000000000000000000000000000000000000000000000000000000000000000000006218
+#+end_src
