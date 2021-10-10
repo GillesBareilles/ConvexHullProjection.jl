@@ -1,6 +1,10 @@
 #+TITLE: ConvexHullProjections.jl
 
-Compute the projection of zero on the convex hull of points iteratively using *arbitrary precision*. The iterates *eventually identify the active faces* of the polyhedron and converge quadratically.
+Minimize smooth functions on structured sets iteratively using *arbitrary precision*, the iterates *eventually identify the active faces* of the set and converge quadratically.
+
+Supported sets:
+- the simplex;
+- the spectraplex, /e.g. the simplex for symmetric matrices/.
 
 The implemented algorithm is described in the preprint *Newton acceleration on manifolds identified by proximal-gradient methods*, _G. Bareilles, F. Iutzeler, J. Malick_ available on [[https://arxiv.org/abs/2012.12936][arXiv]].
 
@@ -9,9 +13,9 @@ Note that this a rather experimental code, don't hesitate to get in touch!
 * Example
 
 ** Projecting zero on the convex hull of vectors
-Three points in $\mathbb R^2$. The result is given as the coefficients of the linear combination of the vectors. The identification property is evidenced by the *exact* zeros in the combination coefficients, and the `SimplexFace` object.
+Three points in $\mathbb R^2$. The result is given as the coefficients of the linear combination of the vectors. The identification property is evidenced by the *exact* zeros in the combination coefficients, and the ~SimplexFace~ object.
 
-**Example**: `Float64`
+**Example**: ~Float64~
 #+begin_src julia
 julia> using ConvexHullProjection
 
@@ -25,7 +29,7 @@ julia> res, manifold = optimize(set, zeros(3))
 ([1.0, 0.0, 0.0], SimplexFace(Bool[1, 0, 0]))
 #+end_src
 
-**Example**: `BigFloat`
+**Example**: ~BigFloat~
 #+begin_src julia
 julia> set = SimplexShadow{BigFloat}([
            2 1 2
@@ -37,9 +41,9 @@ julia> res, structure = optimize(set, zeros(BigFloat, 3))
 (BigFloat[0.0, 0.50, 0.50], SimplexFace(Bool[0, 1, 1]))
 #+end_src
 
-** Spectraplex shadow
+** Projecting zero on a spectraplex shadow
 
-We compute here the projection of zero on the image of the spectraplex by a linear map, aka /a shadow of the spectraplex/. The algorithm returns the point of the spectraplex which image by the linear mapping has minimal norm. This point may lie at a kink of the spectraplex, that is it may not have full rank : the rank identified by the algorithm is encoded in the `SymmPosSemidefFixedRankUnitTrace` object.
+We compute here the projection of zero on the image of the spectraplex by a linear map, aka /a shadow of the spectraplex/. The algorithm returns the point of the spectraplex which image by the linear mapping has minimal norm. This point may lie at a kink of the spectraplex, that is it may not have full rank : the rank identified by the algorithm is encoded in the ~SymmPosSemidefFixedRankUnitTrace~ object.
 
 #+begin_src julia
 julia> using ConvexHullProjection, LinearAlgebra, Random
@@ -55,5 +59,3 @@ julia> Z, manifold = optimize(set, zeros(m, m));
 julia> manifold
 SymmPosSemidefFixedRankUnitTrace{5, 3}()
 #+end_src
-
-#+RESULTS:
