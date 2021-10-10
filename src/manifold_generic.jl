@@ -19,3 +19,16 @@ function project(M, x, d)
     project!(M, res, x, d)
     return res
 end
+
+
+function ∇f(set, x, kwargs...)
+    res = similar(x)
+    ∇f!(res, set, x, kwargs...)
+    return res
+end
+
+function ∇²f(set, x, d, kwargs...)
+    res = similar(d)
+    ∇²f!(res, set, x, d, kwargs...)
+    return res
+end

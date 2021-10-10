@@ -5,15 +5,7 @@ function manifold_to_amb_repr(M, x)
     return x
 end
 
-function amb_to_manifold_repr(M::SymmPosSemidefFixedRankUnitTrace, x)
-    return mat_to_lowrankmat(M, x)
-end
-function manifold_to_amb_repr(M::SymmPosSemidefFixedRankUnitTrace, x)
-    return x * x'
-end
-
 manifold_repr(M) = AmbRepr()
-manifold_repr(::SymmPosSemidefFixedRankUnitTrace) = QuotRepr()
 
 
 function newton_manifold!(x, set::StructuredSet{Tf}, M, ::AmbRepr) where {Tf}

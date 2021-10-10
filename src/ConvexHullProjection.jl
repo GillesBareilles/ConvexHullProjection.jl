@@ -27,24 +27,26 @@ struct AmbRepr <: PointRepr end
 struct QuotRepr <: PointRepr end
 
 
-include("utils_simplexprojection.jl")
-include("manifold_generic.jl")
+include("simplex/utils_simplexprojection.jl")
 
+# Manifolds
+include("manifold_generic.jl")
+include("simplex/manifold_simplexface.jl")
+include("spectraplex/manifold_spectraplexface.jl")
+
+# Optim problems
+include("simplex/projection_simplexshadow.jl")
+include("spectraplex/projection_spectraplexshadow.jl")
+
+# Optimization routines
 include("utils_display.jl")
 include("projectedgradient.jl")
 include("newtonmanifold.jl")
+include("optimize.jl")
 
-include("manifold_simplexface.jl")
-include("projection_convexhull.jl")
 
-include("manifold_spectraplexface.jl")
-include("projection_spectraplex.jl")
-
-include("projection.jl")
-
-export ConvexHull
-export SimplexFace
+export SimplexShadow, SimplexFace
 export SpectraplexShadow, SymmPosSemidefFixedRankUnitTrace
-export projection_zero
+export optimize
 
 end # module

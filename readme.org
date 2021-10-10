@@ -8,64 +8,52 @@ Note that this a rather experimental code, don't hesitate to get in touch!
 
 * Example
 
-** Convex Hull
-Three points in $\mathbb R^2$. The result is given as the coefficients of the linear combination of the convex hull edges. The identification property is evidenced by the *exact* zeros in the combination coefficients.
+** Projecting zero on the convex hull of vectors
+Three points in $\mathbb R^2$. The result is given as the coefficients of the linear combination of the vectors. The identification property is evidenced by the *exact* zeros in the combination coefficients, and the `SimplexFace` object.
 
+**Example**: `Float64`
 #+begin_src julia
 julia> using ConvexHullProjection
 
-julia> set = ConvexHull{Float64}([
+julia> set = SimplexShadow{Float64}([
            1 1 2
            1 2 1
        ])
-ConvexHull{Float64}([1.0 1.0 2.0; 1.0 2.0 1.0])
+SimplexShadow{Float64}([1.0 1.0 2.0; 1.0 2.0 1.0])
 
-julia> res, manifold = projection_zero(set, zeros(3))
-3-element Vector{Float64}:
- 1.0
- 0.0
- 0.0
+julia> res, manifold = optimize(set, zeros(3))
+([1.0, 0.0, 0.0], SimplexFace(Bool[1, 0, 0]))
+#+end_src
 
-julia> set = ConvexHull{BigFloat}([
+**Example**: `BigFloat`
+#+begin_src julia
+julia> set = SimplexShadow{BigFloat}([
            2 1 2
            2 2 1
        ])
-ConvexHull{BigFloat}(BigFloat[2.0 1.0 2.0; 2.0 2.0 1.0])
+SimplexShadow{BigFloat}(BigFloat[2.0 1.0 2.0; 2.0 2.0 1.0])
 
-julia> res, structure = projection_zero(set, zeros(BigFloat, 3))
-3-element Vector{BigFloat}:
- 0.0
- 0.4999999999999999999999999999999999999999999999999999999999999999999999999993825
- 0.5000000000000000000000000000000000000000000000000000000000000000000000000006218
+julia> res, structure = optimize(set, zeros(BigFloat, 3))
+(BigFloat[0.0, 0.50, 0.50], SimplexFace(Bool[0, 1, 1]))
 #+end_src
 
 ** Spectraplex shadow
 
-#+begin_src julia
-julia> using ConvexHullProjection, LinearAlgebra, Random
-
-julia> n, m = 12, 5
-(12, 5)
-
-julia> Tf = Float64
-Float64
-
-julia> Random.seed!(1643)
-julia> As = [Symmetric(rand(Tf, m, m)) for i in 1:n];
-julia> set = SpectraplexShadow(As, m);
-
-julia> Zpgnewton, manifold = projection_zero(set, zeros(Tf, m, m));
-#+end_src
+We compute here the projection of zero on the image of the spectraplex by a linear map, aka /a shadow of the spectraplex/. The algorithm returns the point of the spectraplex which image by the linear mapping has minimal norm. This point may lie at a kink of the spectraplex, that is it may not have full rank : the rank identified by the algorithm is encoded in the `SymmPosSemidefFixedRankUnitTrace` object.
 
 #+begin_src julia
 julia> using ConvexHullProjection, LinearAlgebra, Random
 
-julia> m = 2
-2
+julia> n, m = 12, 5;
 
-julia> As = [Symmetric([1.0 0.0; 0.0 0.0])]
-1-element Vector{Symmetric{Float64, Matrix{Float64}}}:
- [1.0 0.0; 0.0 0.0]
+julia> Random.seed!(1643);
 
-julia> set = SpectraplexShadow(As, m);
+julia> set = SpectraplexShadow([Symmetric(rand(m, m)) for i in 1:n], m);
+
+julia> Z, manifold = optimize(set, zeros(m, m));
+
+julia> manifold
+SymmPosSemidefFixedRankUnitTrace{5, 3}()
 #+end_src
+
+#+RESULTS:

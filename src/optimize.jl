@@ -1,12 +1,12 @@
 """
-    projection_zero(set, x0)
+    optimize(set, x0)
 
 Compute the projection of zero on the given `set` starting from point `x0` in arbitrary type. Solved using a projected gradient accelerated by Riemannian Newton steps on the identified manifolds.
 
 ### Reference:
 - Newton acceleration on manifolds identified by proximal-gradient methods
 """
-function projection_zero(set::StructuredSet{Tf}, x0;
+function optimize(set::StructuredSet{Tf}, x0;
                          newtonaccel = true,
                          maxiter = 100,
                          showtrace = false,

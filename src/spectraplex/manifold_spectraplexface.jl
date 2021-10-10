@@ -21,6 +21,7 @@ function manifold_dimension(::SymmPosSemidefFixedRankUnitTrace{r, k}) where {r, 
     return r*k - 1
 end
 
+
 @doc raw"""
     $(SIGNATURES)
 
@@ -91,7 +92,13 @@ end
 ################################################################################
 
 function mat_to_lowrankmat(::SymmPosSemidefFixedRankUnitTrace{r, k}, Z::AbstractMatrix{Tf}) where {r, k, Tf}
-    λs, E = eigen(Symmetric(Z))
+end
+
+
+
+
+function amb_to_manifold_repr(::SymmPosSemidefFixedRankUnitTrace{r, k}, x::AbstractMatrix{Tf}) where {r, k, Tf}
+    λs, E = eigen(Symmetric(x))
     λs .= max.(λs, 0)
 
     Y = zeros(Tf, r, k)
@@ -100,7 +107,10 @@ function mat_to_lowrankmat(::SymmPosSemidefFixedRankUnitTrace{r, k}, Z::Abstract
     end
     return Y
 end
-lowrankmat_to_mat(Z) = Z * Z'
+function manifold_to_amb_repr(::SymmPosSemidefFixedRankUnitTrace, x)
+    return x * x'
+end
+manifold_repr(::SymmPosSemidefFixedRankUnitTrace) = QuotRepr()
 
 
 """
