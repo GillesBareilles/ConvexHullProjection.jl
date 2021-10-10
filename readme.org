@@ -8,6 +8,7 @@ Note that this a rather experimental code, don't hesitate to get in touch!
 
 * Example
 
+** Convex Hull
 Three points in $\mathbb R^2$. The result is given as the coefficients of the linear combination of the convex hull edges. The identification property is evidenced by the *exact* zeros in the combination coefficients.
 
 #+begin_src julia
@@ -19,7 +20,7 @@ julia> set = ConvexHull{Float64}([
        ])
 ConvexHull{Float64}([1.0 1.0 2.0; 1.0 2.0 1.0])
 
-julia> res = projection_zero(set, zeros(3))
+julia> res, manifold = projection_zero(set, zeros(3))
 3-element Vector{Float64}:
  1.0
  0.0
@@ -31,9 +32,40 @@ julia> set = ConvexHull{BigFloat}([
        ])
 ConvexHull{BigFloat}(BigFloat[2.0 1.0 2.0; 2.0 2.0 1.0])
 
-julia> res = projection_zero(set, zeros(BigFloat, 3))
+julia> res, structure = projection_zero(set, zeros(BigFloat, 3))
 3-element Vector{BigFloat}:
  0.0
  0.4999999999999999999999999999999999999999999999999999999999999999999999999993825
  0.5000000000000000000000000000000000000000000000000000000000000000000000000006218
+#+end_src
+
+** Spectraplex shadow
+
+#+begin_src julia
+julia> using ConvexHullProjection, LinearAlgebra, Random
+
+julia> n, m = 12, 5
+(12, 5)
+
+julia> Tf = Float64
+Float64
+
+julia> Random.seed!(1643)
+julia> As = [Symmetric(rand(Tf, m, m)) for i in 1:n];
+julia> set = SpectraplexShadow(As, m);
+
+julia> Zpgnewton, manifold = projection_zero(set, zeros(Tf, m, m));
+#+end_src
+
+#+begin_src julia
+julia> using ConvexHullProjection, LinearAlgebra, Random
+
+julia> m = 2
+2
+
+julia> As = [Symmetric([1.0 0.0; 0.0 0.0])]
+1-element Vector{Symmetric{Float64, Matrix{Float64}}}:
+ [1.0 0.0; 0.0 0.0]
+
+julia> set = SpectraplexShadow(As, m);
 #+end_src
