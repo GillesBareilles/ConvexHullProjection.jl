@@ -73,7 +73,6 @@ git-tree-sha1 = "e90fa90bda3f3f993128dedf3fe347d1267058b3"
 repo-rev = "master"
 repo-url = "https://github.com/GillesBareilles/ConjugateGradient.jl"
 uuid = "410873c1-f8f8-46a6-bf19-1d1ac773cd81"
-version = "0.1.0"
 
 [[CovarianceEstimation]]
 deps = ["LinearAlgebra", "Statistics", "StatsBase"]
