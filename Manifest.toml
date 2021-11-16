@@ -69,7 +69,9 @@ uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 
 [[ConjugateGradient]]
 deps = ["DocStringExtensions", "LinearAlgebra", "Printf"]
-path = "/home/gilles/.julia/dev/ConjugateGradient.jl/"
+git-tree-sha1 = "e90fa90bda3f3f993128dedf3fe347d1267058b3"
+repo-rev = "master"
+repo-url = "https://github.com/GillesBareilles/ConjugateGradient.jl"
 uuid = "410873c1-f8f8-46a6-bf19-1d1ac773cd81"
 version = "0.1.0"
 

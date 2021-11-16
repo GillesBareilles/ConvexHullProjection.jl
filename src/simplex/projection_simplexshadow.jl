@@ -14,7 +14,7 @@ f(ch::SimplexShadow, α, ::AmbRepr) = 0.5 * norm(ch.A * α)^2
 
 ∇²f!(res, ch::SimplexShadow, x, d, ::AmbRepr) = (res .= ch.A' * ch.A * d)
 
-g(::SimplexShadow, α) = sum(α) == 1 && sum( α .>= 0) == length(α)
+g(::SimplexShadow, α) = sum(α) == 1 && sum(α .>= 0) == length(α)
 
 
 """

@@ -1,5 +1,5 @@
-function display_proxgradlog(set, x, repr, step, normgradFₓ, it, L, structure)
-    @printf "%3i  %.16e %.3e  |gradf|: %.3e " it f(set, x, repr) step normgradFₓ
+function display_proxgradlog(set, x, repr, step, normgradFₓ, it, L, structure, it_bt)
+    @printf "%3i  %.16e %.3e  |gradf|: %.3e  it_bt: %.3i " it f(set, x, repr) step normgradFₓ it_bt
     s = @sprintf " L = %.1e  %s   \n" L structure
     printstyled(s, color=:green)
     return

@@ -20,6 +20,8 @@ using Zygote
 
 import LinearAlgebra.lyap
 
+const CHP = ConvexHullProjection
+
 abstract type StructuredSet{Tf} end
 
 abstract type PointRepr end
@@ -48,5 +50,7 @@ include("optimize.jl")
 export SimplexShadow, SimplexFace
 export SpectraplexShadow, SymmPosSemidefFixedRankUnitTrace
 export optimize
+
+export CHP
 
 end # module

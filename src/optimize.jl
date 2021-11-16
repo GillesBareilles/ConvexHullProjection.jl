@@ -10,7 +10,7 @@ function optimize(set::StructuredSet{Tf}, x0;
                          newtonaccel = true,
                          maxiter = 100,
                          showtrace = false,
-                         printls = false,
+                         showls = false,
                          ) where {Tf}
     x = similar(x0)
     repr = AmbRepr()
@@ -25,33 +25,39 @@ function optimize(set::StructuredSet{Tf}, x0;
     stopped = false
     L = Tf(1e-5)
 
+    step_pg = 0.0
+    normgradᴹFx = 0.0
+
     showtrace && @printf "     %.16e\n" f(set, x, repr)
     it = 0
     while !converged && !stopped
         ∇f!(∇fx, set, x, repr)
 
         ## backtracking procedure for proxgrad step
-        M, L, it_btbeck = backtracked_proxgrad!(x, set, L, x_old, ∇fx, u, repr; printls)
+        M, L, it_btbeck = backtracked_proxgrad!(x, set, L, x_old, ∇fx, u, repr; showls)
 
         ## Logging step
-        step = norm(x_old - x)
-        normgradFₓ = gradᴹnorm(set, M, x, repr)
-        showtrace && display_proxgradlog(set, x, repr, step, normgradFₓ, it, L, M)
+        step_pg = norm(x_old - x)
+        if showtrace
+            normgradFₓ = gradᴹnorm(set, M, x, repr)
+            display_proxgradlog(set, x, repr, step_pg, normgradFₓ, it, L, M, it_btbeck)
+        end
         x_old .= x
 
-        if newtonaccel
-            ## Add Newton acceleration step
-            # inds = identification_Newtonaccel!(x, set, M, repr)
+        if !converged && newtonaccel
+            ## Newton acceleration step
             inds = newton_manifold!(x, set, M, repr)
 
             ##Logging
-            step = norm(x_old - x)
+            step_newton = norm(x_old - x)
             normgradᴹFx = gradᴹnorm(set, M, x, repr)
-            showtrace && display_newtonsteplog(set, x, repr, step, normgradᴹFx, inds)
+            showtrace && display_newtonsteplog(set, x, repr, step_newton, normgradᴹFx, inds)
         end
 
         stopped = it > maxiter
-        converged = normgradᴹFx < 1e2 * eps(Tf) || norm(x-x_old) < 1e2 * eps(Tf)
+        converged = step_pg < 1e1 * eps(Tf)
+        # converged = normgradᴹFx < 1e2 * eps(Tf) || step_pg < 1e2 * eps(Tf)
+        # converged = normgradᴹFx < 1e2 * eps(Tf) || step_pg < 1e2 * eps(Tf)
 
         x_old .= x
         it += 1
