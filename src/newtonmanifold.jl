@@ -26,7 +26,7 @@ function newton_manifold!(x, set::StructuredSet{Tf}, M, ::AmbRepr) where {Tf}
 
     # Solve Newton's equation
     tol = max(1e-3 * min(0.5, (gradnorm)^0.5) * gradnorm, eps(Tf))
-    dᴺ, CGstats = solve_tCG(HessFₓη!, gradFₓ; ν=1e-15, ϵ_residual = tol, maxiter=2*manifold_dimension(M), printlev=0)
+    dᴺ, CGstats = solve_tCG(HessFₓη!, -gradFₓ; ν=1e-15, ϵ_residual = tol, maxiter=2*manifold_dimension(M), printlev=0)
 
     res = zeros(size(gradFₓ))
     HessFₓη!(res, dᴺ)
