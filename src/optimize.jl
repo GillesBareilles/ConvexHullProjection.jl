@@ -66,5 +66,11 @@ function optimize(set::StructuredSet{Tf}, x0;
 
     (showtermination || showtrace) && display_finalpointlog(set, x, M, it, repr, converged, stopped)
     @debug "projection:" f(set, x, repr) gradᴹnorm(set, M, x, repr) M
-    return x, M
+    return x, M, (;
+                  converged,
+                  stopped,
+                  step_pg,
+                  normgradᴹFx = gradᴹnorm(set, M, x, repr),
+                  fx = f(set, x, repr)
+                  )
 end
