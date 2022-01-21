@@ -37,11 +37,15 @@ function newton_manifold!(x, set::StructuredSet{Tf}, M, ::AmbRepr) where {Tf}
     γ(t) = retract(M, x_man, t .* dᴺ)
 
     function φ(t)
-        return f(set, γ(t), manrepr) + g(set, γ(t), manrepr)
+        if isinf(g(set, γ(t), manrepr))
+            @warn "infinite value in manifold linesearch"
+        end
+        return f(set, γ(t), manrepr)# + g(set, γ(t), manrepr)
     end
 
     φ_0 = φ(0.0)
     dφ_0 = dot(gradFₓ, dᴺ)
+    (dφ_0 > 0) && @warn "ascent direction in linesearch" dφ_0
     α, fx = ls(φ, 1.0, φ_0, dφ_0)
 
     inds = (;
