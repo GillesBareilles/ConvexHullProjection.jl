@@ -9,6 +9,7 @@ Compute the projection of zero on the given `set` starting from point `x0` in ar
 function optimize(set::StructuredSet{Tf}, x0;
                          newtonaccel = true,
                          maxiter = 100,
+                         showtermination = false,
                          showtrace = false,
                          showls = false,
                          ) where {Tf}
@@ -63,7 +64,7 @@ function optimize(set::StructuredSet{Tf}, x0;
         it += 1
     end
 
-    showtrace && display_finalpointlog(set, x, M, it, repr, converged, stopped)
+    (showtermination || showtrace) && display_finalpointlog(set, x, M, it, repr, converged, stopped)
     @debug "projection:" f(set, x, repr) gradᴹnorm(set, M, x, repr) M
     return x, M
 end
