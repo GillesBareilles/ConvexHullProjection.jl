@@ -91,7 +91,7 @@ function g(::SpectraplexShadow{Tf}, X, ::QuotRepr) where Tf
     tol = 50 * eps(Tf)
 
     σ = svdvals(X)
-    norm(sum(σ) - Tf(1)) > tol && return Tf(Inf)
+    norm(sum(σ.^2) - Tf(1)) > tol && return Tf(Inf)
 
     return Tf(0)
 end
